@@ -1,3 +1,9 @@
+from ibm_watson import PersonalityInsightsV3
+import pandas as pd
+import tweepy
+import json
+import time
+
 TWITTER_AUTH = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY,TWITTER_CONSUMER_SECRET)
 TWITTER_AUTH.set_access_token(TWITTER_ACCESS_TOKEN,TWITTER_ACCESS_TOKEN_SECRET)
 TWITTER = tweepy.API(TWITTER_AUTH)
