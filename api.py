@@ -20,7 +20,7 @@ def main(event, context):
      # WARNING: this is a very expensive step
      # API call and store data
      # Do not set the num_periods over 5, it will eat up the API
-    num_periods = 5
+    num_periods = 10
     name = input
     df_a = pd.DataFrame()
 
@@ -130,6 +130,11 @@ def main(event, context):
      Need to return df_pnv, df_p, df_n, df_v separately.
      df_a does not need to be returned
      """
+    # Return statements
+#      df_pnv.to_json(date_format='iso', orient='split')
+#      df_p.to_json(date_format='iso', orient='split')
+#      df_n.to_json(date_format='iso', orient='split')
+#      df_v.to_json(date_format='iso', orient='split')
      
 
     # Return proper data as json for other callbacks
