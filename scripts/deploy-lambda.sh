@@ -3,9 +3,9 @@
 AWS_USER_ID=$(aws sts get-caller-identity | jq '.["UserId"]' | tr -d '"')
 
 aws lambda create-function \
-  --function-name timeseries_data_generate \
+  --function-name personality-graphs-api \
   --runtime python3.7 \
   --handler api.main \
   --timeout 30 \
   --role arn:aws:iam::$AWS_USER_ID:role/aws-lambda-cli-role \
-  --zip-file fileb://function.zip
+  --code S3Bucket=colejhudson,S3Key=functions/personality-graphs-api/function.zip
