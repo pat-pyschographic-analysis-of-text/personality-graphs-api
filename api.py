@@ -3,26 +3,35 @@ import pandas as pd
 import tweepy
 import json
 import time
+import os
+
+TWITTER_CONSUMER_KEY = os.environ['TWITTER_CONSUMER_KEY'] 
+TWITTER_CONSUMER_SECRET = os.environ['TWITTER_CONSUMER_SECRET']
+TWITTER_ACCESS_TOKEN = os.environ['TWITTER_ACCESS_TOKEN']
+TWITTER_ACCESS_SECRET = os.environ['TWITTER_ACCESS_SECRET']
 
 TWITTER_AUTH = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY,TWITTER_CONSUMER_SECRET)
-TWITTER_AUTH.set_access_token(TWITTER_ACCESS_TOKEN,TWITTER_ACCESS_TOKEN_SECRET)
+TWITTER_AUTH.set_access_token(TWITTER_ACCESS_TOKEN,TWITTER_ACCESS_SECRET)
 TWITTER = tweepy.API(TWITTER_AUTH)
 
-def get_and_process_data(input):
+TWEET_COUNT = 50
+
+def main(event, context):
      # WARNING: this is a very expensive step
      # API call and store data
      # Do not set the num_periods over 5, it will eat up the API
     num_periods = 5
     name = input
     df_a = pd.DataFrame()
+
     for i in range(num_periods):
         try:
             twitter_user = TWITTER.user_timeline(screen_name=name,
-                                          count=30,
+                                          count=TWEET_COUNT,
                                           tweet_mode='extended',
                                           max_id=twitter_user.max_id)
 
-            favorites = TWITTER.favorites(name,count=30,
+            favorites = TWITTER.favorites(name,count=TWEET_COUNT,
                                        max_id=favorites.max_id)
 
             def convert_status_to_pi_content_item(t,f):
@@ -61,8 +70,8 @@ def get_and_process_data(input):
             df_a = df_a.append(df)
 
         except:
-            twitter_user = TWITTER.user_timeline(screen_name=name,count=30,tweet_mode='extended')
-            favorites = TWITTER.favorites(screen_name=name,count=30)
+            twitter_user = TWITTER.user_timeline(screen_name=name,count=TWEET_COUNT,tweet_mode='extended')
+            favorites = TWITTER.favorites(screen_name=name,count=TWEET_COUNT)
             def convert_status_to_pi_content_item(t,f):
                  return {
                      'content': t.full_text + f.text,
@@ -98,5 +107,9 @@ def get_and_process_data(input):
             df['time'] = twitter_user[0].created_at
             df_a = df_a.append(df)
 
+
     # Return proper data as json for other callbacks
-    return df_a.to_json(date_format='iso', orient='split')
+    return {
+        'statusCode': 200,
+        'body': df_a.to_json(date_format='iso', orient='split')       
+    } 
