@@ -106,7 +106,31 @@ def main(event, context):
             df = pd.concat([p,n,v],axis=0)
             df['time'] = twitter_user[0].created_at
             df_a = df_a.append(df)
+     
+     # Data for personality + needs + values
+     df_pnv = df_a.groupby(['time','category']).mean().unstack()
+     df_pnv.columns = df_pnv.columns.droplevel()
 
+     # Data for personality graph only
+     df_p = df_a[df_a['category'] == 'personality']
+     df_p = df_p.groupby(['time','name']).mean().unstack()
+     df_p.columns = df_p.columns.droplevel()
+
+     # Data for needs graph only
+     df_n = df_a[df_a['category'] == 'needs']
+     df_n = df_n.groupby(['time','name']).mean().unstack()
+     df_n.columns = df_n.columns.droplevel()
+
+     # Data for values graph only
+     df_v = df_a[df_a['category'] == 'values']
+     df_v = df_v.groupby(['time','name']).mean().unstack()
+     df_v.columns = df_v.columns.droplevel()
+     
+     """
+     Need to return df_pnv, df_p, df_n, df_v separately.
+     df_a does not need to be returned
+     """
+     
 
     # Return proper data as json for other callbacks
     return {
