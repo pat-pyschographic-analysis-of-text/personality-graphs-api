@@ -9,6 +9,7 @@ verify_ssl = true
 tweepy = "*"
 ibm-watson = "*"
 pandas = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"
